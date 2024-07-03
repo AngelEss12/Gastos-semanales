@@ -17,6 +17,13 @@ class Presupuesto {
         this.restante = Number(presupuesto);
         this.gastos = [];
     }
+
+    nuevoGasto(gasto) {
+        this.gastos = [...this.gastos, gasto];
+        console.log(this.gastos);
+        // const nombre = document.querySelector('#gasto').value;
+        // const cantidad = Number(document.querySelector('#cantidad').value);
+    }
 }
 
 class UI {
@@ -51,6 +58,19 @@ class UI {
             document.querySelector('.alert').remove();
         }, 3000);
     }
+
+    agregarGastoLista(gastos) {
+        // Iterrar sobre los gastos
+        gastos.forEach(gasto => {
+            console.log(gastos);
+            // Crear elemento li
+            // const li = document.createElement('li');
+            // li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            // li.innerHTML = `
+                // ${gasto.nombre}
+                // <span class="badge badge-primary badge-pill">$${gasto.cantidad}</span>
+            // `;  
+    })
 }
 
 let presupuesto;
@@ -69,7 +89,6 @@ function preguntarPresupuesto() {
     }
 
     presupuesto = new Presupuesto(presupuestoUsuario);
-    console.log(presupuesto);
 
     ui.insertarPresupuesto(presupuesto);
 };
@@ -89,6 +108,18 @@ function agregarGasto(e) {
         ui.imprimirAlerta('La cantidad no es valida', 'error');
         return;
     }
+    
+    // Generar un objeto con el gasto
+    const gasto = {nombreGasto, cantidadGasto, id: Date.now()};
+    presupuesto.nuevoGasto(gasto);
+    
+    // Mensaje correcto
+    ui.imprimirAlerta('Gasto agregado correctamente');
 
-    console.log('Agregando Gasto');
+    // Agregar el gasto a la lista
+    const {gastos} = presupuesto;
+    ui.agregarGastoLista(gastos);
+
+    // Reinicia el formulario
+    formulario.reset();
 }
