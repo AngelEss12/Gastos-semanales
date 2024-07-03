@@ -20,9 +20,6 @@ class Presupuesto {
 
     nuevoGasto(gasto) {
         this.gastos = [...this.gastos, gasto];
-        console.log(this.gastos);
-        // const nombre = document.querySelector('#gasto').value;
-        // const cantidad = Number(document.querySelector('#cantidad').value);
     }
 }
 
@@ -60,17 +57,37 @@ class UI {
     }
 
     agregarGastoLista(gastos) {
+        // Elimina el html previo
+        this.limpiarHTML();
+
         // Iterrar sobre los gastos
         gastos.forEach(gasto => {
-            console.log(gastos);
+            const {cantidad, nombre, id} = gasto;
+
             // Crear elemento li
-            // const li = document.createElement('li');
-            // li.className = 'list-group-item d-flex justify-content-between align-items-center';
-            // li.innerHTML = `
-                // ${gasto.nombre}
-                // <span class="badge badge-primary badge-pill">$${gasto.cantidad}</span>
-            // `;  
-    })
+            const nuevoGasto = document.createElement('li');
+            nuevoGasto.className = 'list-group-item d-flex justify-content-between align-items-center';
+            nuevoGasto.dataset.id = id;
+
+            // Agregar contenido HTML al gasto
+            nuevoGasto.innerHTML = `${nombre} <span class="badge badge-primary badge-pill">$${cantidad}</span>`;  
+
+            // Boton para borrar gasto
+            const btnBorrar = document.createElement('button');
+            btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto');
+            btnBorrar.innerHTML = 'Borrar &times;';
+            nuevoGasto.appendChild(btnBorrar);
+
+            // Agregar al HTML
+            gastoListado.appendChild(nuevoGasto);
+        })
+    }
+
+    limpiarHTML() {
+        while (gastoListado.firstChild) {
+            gastoListado.removeChild(gastoListado.firstChild);
+        }
+    }
 }
 
 let presupuesto;
@@ -97,20 +114,20 @@ function agregarGasto(e) {
     e.preventDefault();
 
     // Leer datos del formulario
-    const nombreGasto = document.querySelector('#gasto').value;
-    const cantidadGasto = Number(document.querySelector('#cantidad').value);
+    const nombre = document.querySelector('#gasto').value;
+    const cantidad = Number(document.querySelector('#cantidad').value);
 
     // Validar datos
-    if (nombreGasto === '' || cantidadGasto === 0) {
+    if (nombre === '' || cantidad === 0) {
         ui.imprimirAlerta('Ambos campos son obligatorios', 'error');
         return;
-    } else if (cantidadGasto <= 0 || isNaN(cantidadGasto)) {
+    } else if (cantidad <= 0 || isNaN(cantidad)) {
         ui.imprimirAlerta('La cantidad no es valida', 'error');
         return;
     }
     
     // Generar un objeto con el gasto
-    const gasto = {nombreGasto, cantidadGasto, id: Date.now()};
+    const gasto = {nombre, cantidad, id: Date.now()};
     presupuesto.nuevoGasto(gasto);
     
     // Mensaje correcto
