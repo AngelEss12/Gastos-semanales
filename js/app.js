@@ -27,7 +27,8 @@ class Presupuesto {
 
     calcularRestante() {
         const gastado = this.gastos.reduce((total, gasto) => total + gasto.cantidad, 0);
-        console.log(gastado);
+        this.restante = this.presupuesto - gastado;
+        console.log(this.restante);
     }
 }
 
@@ -96,6 +97,10 @@ class UI {
             gastoListado.removeChild(gastoListado.firstChild);
         }
     }
+
+    actualizarRestante(restante) {
+        document.querySelector('#restante').textContent = restante;
+    }
 }
 
 let presupuesto;
@@ -142,8 +147,10 @@ function agregarGasto(e) {
     ui.imprimirAlerta('Gasto agregado correctamente');
 
     // Agregar el gasto a la lista
-    const {gastos} = presupuesto;
+    const {gastos, restante} = presupuesto;
     ui.agregarGastoLista(gastos);
+
+    ui.actualizarRestante(restante);
 
     // Reinicia el formulario
     formulario.reset();
